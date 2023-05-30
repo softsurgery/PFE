@@ -1,0 +1,78 @@
+title Migration of the Database
+
+participant Dev Agent
+participant Symfony Kernel
+participant Database Pilote
+participant MySQL Database
+
+//Installing Dependencies
+Dev Agent -> Symfony Kernel:Exec "composer require doctrine"
+activate Symfony Kernel
+Symfony Kernel --> Symfony Kernel:Installing "Doctorine" 
+Symfony Kernel --> Dev Agent : Composer Logs
+deactivate Symfony Kernel
+
+
+
+//Create Database
+Dev Agent -> Symfony Kernel:Exec "php bin/console doctrine:database:create"
+activate Symfony Kernel
+Symfony Kernel --> Symfony Kernel :Writing in config/packages/doctrine.yaml
+Symfony Kernel --> Database Pilote : Triggering
+activate Database Pilote
+Database Pilote --> MySQL Database : Establishing Connection
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+Database Pilote --> MySQL Database : Authentication and Handshake
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+Database Pilote --> MySQL Database : Query Execution
+activate MySQL Database
+MySQL Database --> Database Pilote :
+deactivate MySQL Database
+Database Pilote -->Symfony Kernel : 
+deactivate Database Pilote
+Symfony Kernel --> Dev Agent : Doctorine Logs
+deactivate Symfony Kernel
+
+//Make Migration
+Dev Agent -> Symfony Kernel:Exec "php bin/console make:migration"
+activate Symfony Kernel
+Symfony Kernel --> Symfony Kernel :Creating Migration Files
+Symfony Kernel --> Symfony Kernel :Writing in config/packages/doctrine.yaml
+Symfony Kernel --> Dev Agent : Doctorine Logs
+deactivate Symfony Kernel
+
+
+//Create Database
+Dev Agent -> Symfony Kernel:Exec "php bin/console doctrine:migrations:migrate"
+activate Symfony Kernel
+Symfony Kernel --> Symfony Kernel :Writing in config/packages/doctrine.yaml
+Symfony Kernel --> Database Pilote : Triggering
+activate Database Pilote
+Database Pilote --> MySQL Database : Establishing Connection
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+Database Pilote --> MySQL Database : Authentication and Handshake
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+loop [remaining tables>0]
+Database Pilote->MySQL Database:Query Execution
+activate MySQL Database
+MySQL Database --> Database Pilote :
+deactivate MySQL Database
+end
+Database Pilote -->Symfony Kernel :
+deactivate Database Pilote
+Symfony Kernel --> Dev Agent : Doctorine Logs
+deactivate Symfony Kernel
+
+
+
+
+
+
