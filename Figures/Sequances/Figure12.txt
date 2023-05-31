@@ -1,0 +1,21 @@
+title GOS WebSocket
+
+participant WebSocket Client
+participant Access Gateway
+participant WebSocket Server
+
+WebSocket Client -> Access Gateway : HTTP Request
+activate Access Gateway
+Access Gateway --> WebSocket Server : HTTP Upgrade Request
+activate WebSocket Server
+WebSocket Server --> Access Gateway : HTTP 101 response
+deactivate WebSocket Server
+Access Gateway ->WebSocket Client : HTTP 101 response
+deactivate Access Gateway
+par Send
+WebSocket Client ->Access Gateway: Message
+thread Recieve
+WebSocket Server --> Access Gateway: Message
+end
+WebSocket Client -> Access Gateway : Close Connection
+Access Gateway --> WebSocket Server : Close Connection
