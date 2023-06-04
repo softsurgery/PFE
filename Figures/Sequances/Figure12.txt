@@ -12,10 +12,21 @@ WebSocket Server --> Access Gateway : HTTP 101 response
 deactivate WebSocket Server
 Access Gateway ->WebSocket Client : HTTP 101 response
 deactivate Access Gateway
+loop Connection = True
 par Send
-WebSocket Client ->Access Gateway: Message
+WebSocket Client ->Access Gateway: IN Message 
+activate Access Gateway
+Access Gateway -->WebSocket Server : IN Message
+deactivate Access Gateway
 thread Recieve
-WebSocket Server --> Access Gateway: Message
-end
+WebSocket Server --> Access Gateway: OUT Message
+activate Access Gateway
+Access Gateway ->WebSocket Client : OUT Message
+deactivate Access Gateway
+thread Close
+opt Connection
 WebSocket Client -> Access Gateway : Close Connection
 Access Gateway --> WebSocket Server : Close Connection
+end
+end
+end

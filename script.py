@@ -36,3 +36,6 @@ input_file = "Report.docx"  # Replace with your input file path
 chars_per_file = 1000
 
 split_document(input_file, chars_per_file)
+
+
+
