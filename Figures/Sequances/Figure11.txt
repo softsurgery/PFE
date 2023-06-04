@@ -1,10 +1,10 @@
 title Migration of the Database
 
-participant Dev Agent
+actor Dev Agent
 participant Machine
 participant Django Kernel
 participant Database Pilote
-participant MySQL Database
+database MySQL Database
 
 //Installing Django
 Dev Agent -> Machine : Exec "pip install django"
