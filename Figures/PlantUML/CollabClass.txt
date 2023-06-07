@@ -1,0 +1,57 @@
+@startuml
+!theme plain
+top to bottom direction
+
+class User {
+  id
+  username
+  email
+  enabled
+  password
+  lastLogin
+  fullName
+  online
+  titre
+  deleted
+  createdAt
+  updated
+}
+
+class  Collaborateur extends User {
+ id
+ nom
+ prenom
+ phone
+ email
+ delete
+}
+
+class Expert extends Collaborateur {
+ id
+ nom
+ prenom 
+ phone
+ email
+ signature
+ deleted
+ titre
+}
+
+class UserPicture {
+  id 
+  picture
+}
+
+class AdresseProfil {
+ id
+ adresse
+ adresseComplement
+ codePostal
+ ville
+}
+
+
+User "0..1" -- "1..1" UserPicture
+User "0..1" -- "1..1" AdresseProfil 
+
+@enduml

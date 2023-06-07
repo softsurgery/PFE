@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+
+:Internet User: as i
+:Administrator: as a 
+
+
+
+package "Sprint1 Usecase diagram" {
+
+(Modify Personal\n informations) as modify
+(Login into Account) as login
+(Access Personal Informations) as access
+
+}
+
+i --> login
+a --> modify
+a--> access
+
+modify .> login : <<include>>
+access .> login : <<include>>
+
+
+
+
+@enduml

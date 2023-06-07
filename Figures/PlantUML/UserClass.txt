@@ -1,0 +1,67 @@
+@startuml
+!theme plain
+left to right direction
+
+class Cabinet {
+  id
+  denominationSocial
+  creancier
+  tableauordre
+  formejur
+  siteweb
+  numtel
+  numeroSiren
+  capital
+  siret
+  ntva
+  nomRepLegal
+  prenomRepLegal
+  phoneRepLegal
+  emailRepLegal
+  logo
+  tampon
+  logoFacture
+  logoDocJur
+  logoDocInt
+  logoDocAdm
+  code
+  iban
+  bic
+  banqueName
+  naf
+  rc
+}
+
+class User {
+  id
+  username
+  email
+  enabled
+  password
+  lastLogin
+  fullName
+  online
+  titre
+  deleted
+  createdAt
+  updated
+}
+
+class UserPicture {
+  id 
+  picture
+}
+
+class AdresseProfil {
+ id
+ adresse
+ adresseComplement
+ codePostal
+ ville
+}
+
+User "0..1" --- "1..1" UserPicture
+User "1..1" --- "1..1" Cabinet
+User "0..1" --- "1..1" AdresseProfil 
+
+@enduml
