@@ -1,0 +1,175 @@
+@startuml
+!theme plain
+left to right direction
+
+class LegalDocuments {
+id
+type
+dateDuClosDeExercice28
+dateDuClosDeExercice
+datePuPv
+dateDuPv28
+benefices
+perte
+existenceReportNouveau
+randebiteur
+rancrediteur
+montantAffecte
+reportNouveau
+reservesLegales
+reservesLibre
+compteCourant
+distDividendes
+dateDeSignature
+sousType
+boniMali
+montant
+heur
+dateDuPv1
+heur1
+dateDuPv2
+heur2
+dateDuPv3
+heur3
+dateDuPv17
+heure17
+heure28
+newVilleRcs
+nonremAnnee
+amountIncrease
+donationReleased
+cashContributions
+incorporationReserves
+contributionskind
+objetSocial
+newBusinessName
+newCorporateName
+montantLiber1
+montantLiber2
+sousType2
+newGerantType
+newPresidentType
+statut
+codeNaf
+createdAt
+updatedAt
+
+}
+
+class SuiviMission {
+id
+dateDebut
+statut
+modePaiment
+periodiciteTravaux
+dateSignature
+dateDebutEx
+dateClotureEx
+banque
+iban
+typePayment
+datefinir
+typefinir
+datesuspendre
+typesuspendre
+typeAction
+dateReactivation
+montant
+}
+
+class RepresentantLegal {
+id
+rcs
+nom
+prenom
+nationalite
+dateDeNaissance
+villeNaissance
+paysNaissance
+adresseEmail
+numeroTelephone
+nomPere
+prenomPere
+nomJeuneFilleMere
+prenomMere
+dureePreciseAns
+listeLimitation
+raisonSociale
+capitalSociale 
+}
+
+class MembreEntreprise {
+id
+numeroSiren
+rcs
+nom
+prenom
+nationalite
+dateDeNaissance
+villeNaissance
+paysNaissance
+adresseEmail
+numeroTelephone
+nomPere
+prenomPere
+nomJeuneFilleMere
+prenomMere
+pourcentageActionnariat
+apportNumeraire
+apportNature
+recoursCommissaireApports
+dureePreciseAns
+listeLimitation
+raisonSociale
+capitalSocial
+particulariteApportsEpoux
+note
+type
+deleted
+createdAt
+updatedAt
+}
+
+class Cabinet {
+  id
+  denominationSocial
+  creancier
+  tableauordre
+  formejur
+  siteweb
+  numtel
+  numeroSiren
+  capital
+  siret
+  ntva
+  nomRepLegal
+  prenomRepLegal
+  phoneRepLegal
+  emailRepLegal
+  logo
+  tampon
+  logoFacture
+  logoDocJur
+  logoDocInt
+  logoDocAdm
+  code
+  iban
+  bic
+  banqueName
+  naf
+  rc
+}
+
+
+LegalDocuments "1..n" ---  "1..1" Cabinet
+LegalDocuments "1..1" ----  "1..n" SuiviMission
+LegalDocuments "1..n" ---  "1..n" RepresentantLegal
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+LegalDocuments "1..1" ----  "0..1" MembreEntreprise
+
+@enduml

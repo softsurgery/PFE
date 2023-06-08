@@ -1,0 +1,22 @@
+@startuml
+!theme plain
+left to right direction
+
+:Administrator: as a 
+
+package "Sprint2 UseCase Diagram" {
+(Modify Personal\n Informations) as modify
+(Login into Account) as login
+(Access Personal Informations) as access
+(Logout) as logout
+}
+
+a ---> modify
+a ---> access
+a ---> logout
+
+modify ..> login : <<include>>
+access ..> login : <<include>>
+logout ..> login : <<include>>
+
+@enduml

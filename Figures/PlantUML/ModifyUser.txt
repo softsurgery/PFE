@@ -1,0 +1,51 @@
+
+title Modify User Informations
+
+actor Administrator
+boundary ProfileView
+control UserController
+entity User
+
+ref over Administrator,User : Access User Informations
+loop
+Administrator ->ProfileView : Refill The Form with new Informations
+activate ProfileView
+deactivateafter ProfileView
+Administrator -> ProfileView : Sends Informations
+activate ProfileView
+ProfileView-->ProfileView:Verify Entries
+activate ProfileView
+space
+deactivate ProfileView
+alt Not Validated
+ProfileView-->Administrator:info
+else Validated
+
+group break
+ProfileView --> UserController : login(Object)
+activate ProfileView
+deactivateafter ProfileView
+activate UserController
+
+end
+deactivate ProfileView
+end
+
+end
+UserController-->User : search(Object.getId())
+activate User
+User -->UserController : UserObject
+deactivate User
+deactivate UserController
+
+UserController --> User : updateUser(Object)
+activate UserController
+activate User
+User -->UserController : Response
+deactivate User
+UserController -->ProfileView : Response
+deactivate UserController
+activate ProfileView
+ProfileView ->Administrator :  Response
+deactivate ProfileView
+

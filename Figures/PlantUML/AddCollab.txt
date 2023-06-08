@@ -1,0 +1,36 @@
+actor User
+boundary ReactView
+control UserController
+control CollaboraterController
+
+
+
+entity UserEntity
+entity CollaboraterEntity
+User->ReactView:Refills form with data
+activate ReactView
+
+ReactView-->ReactView:Validates form data
+ref over ReactView,CollaboraterEntity:Add User
+destroy UserController
+destroy UserEntity
+
+alt Valid Data = True
+
+ReactView-->CollaboraterController:Sends Data (JSON)
+activate CollaboraterController
+CollaboraterController-->CollaboraterController:Receives Data (JSON)
+
+CollaboraterController-->CollaboraterEntity:Add User object
+activate CollaboraterEntity
+CollaboraterEntity-->CollaboraterEntity:Adds User
+
+CollaboraterEntity-->CollaboraterController:
+deactivate CollaboraterEntity
+CollaboraterController-->ReactView:
+
+deactivate CollaboraterController
+deactivate ReactView
+else 
+ReactView-->ReactView:Displays validation errors
+end

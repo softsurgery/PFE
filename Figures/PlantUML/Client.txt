@@ -1,0 +1,96 @@
+@startuml
+!theme plain
+top to bottom direction
+
+class Client {
+id
+droitPreemption
+tarificationComptable
+typeFacturation
+tarificationSocial
+tarificationJuridique
+deleted
+createdAt
+updatedAt
+}
+
+class OptionFiscale {
+id
+accesCompteFiscal
+dateCloturePremierExercice
+dateCloture
+adhesionCga
+emailImpotGouv
+motDePasseImpotGouv
+dateCreationCompteFiscal
+aderantAga
+numeroAderantAga
+compteFiscalActif
+}
+
+
+class GestionAdexca {
+id
+tarifComptabilite
+tarifBilan
+honoraireCreation
+honorairePaye
+honorairePrevisionne
+}
+
+class Entreprise {
+id
+raisonSociale
+nomCommercial
+codeNaf
+dureeAns
+objetSocial
+numeroSiren
+dateImmatriculation
+numeroSiret
+nombreAction
+valeurNominale
+capitalSocial
+capitalSocialDontLibere
+numeroTelephone
+adresseEmail
+numeroSirenEnCours
+dateSignatureStatut
+villeRcs
+montantCotisationAdherent
+}
+class Cabinet {
+id
+denominationSocial
+creancier
+tableauordre
+formejur
+siteweb
+numtel
+numeroSiren
+capital
+siret
+ntva
+nomRepLegal
+prenomRepLegal
+phoneRepLegal
+emailRepLegal
+logo
+tampon
+logoFacture
+logoDocJur
+logoDocInt
+logoDocAdm
+code
+iban
+bic
+banqueName
+naf
+rc
+}
+
+Client "0..1" -- "0..1" Cabinet
+Client "0..1" -- "0..1" OptionFiscale
+Client "0..1" -- "0..1" Entreprise
+Client "0..1" -- "0..1" GestionAdexca
+@enduml
