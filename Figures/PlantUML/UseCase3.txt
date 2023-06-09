@@ -6,6 +6,7 @@ left to right direction
 :Collaborateur: as c
 
 package "Sprint3 UseCase Diagram" {
+(Add Collaborator) as add
 (Modify Personal\n Informations) as modify
 (Access Personal Informations) as access
 (Access Collaborateur Informations ) as accessC
@@ -21,9 +22,11 @@ c ---> logout
 a ---> accessC
 a ---> modifyC
 a ---> deleteC
+a ---> add
 a ---> logout 
 
 modify ..> login : <<include>>
+add ..> login : <<include>>
 access ..> login : <<include>>
 logout ..> login : <<include>>
 modifyC ..> login : <<include>>
