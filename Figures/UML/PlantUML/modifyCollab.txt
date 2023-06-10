@@ -1,0 +1,30 @@
+title Modify Collaborator
+actor Administrator
+boundary CollaboratorView
+control UserController
+entity UserEntity
+control CollaboraterController
+entity CollaboraterEntity
+Administrator->CollaboratorView:Refills form with data
+activate CollaboratorView
+CollaboratorView-->CollaboratorView:ValidateForm(data)
+alt Valid Data = True
+CollaboratorView-->UserController:sendsData(JSON)
+ref over UserController,UserEntity:Modify User
+destroy UserController
+destroy UserEntity
+CollaboratorView-->CollaboraterController:sendsData (JSON)
+activate CollaboraterController
+CollaboraterController-->CollaboraterController:receivesData(JSON)
+CollaboraterController-->CollaboraterEntity : ModifyCollaborator(data)
+activate CollaboraterEntity
+CollaboraterEntity-->CollaboraterEntity:AlterCollaborator(Collaborator)
+CollaboraterEntity-->CollaboraterController:
+deactivate CollaboraterEntity
+CollaboraterController-->CollaboratorView:
+deactivate CollaboraterController
+CollaboratorView->Administrator : Modified Succefully
+deactivate CollaboratorView
+else 
+CollaboratorView->Administrator:Displays validation errors
+end

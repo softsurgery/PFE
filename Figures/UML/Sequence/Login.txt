@@ -1,0 +1,29 @@
+title Login
+actor Administrator
+boundary LoginView
+control AuthController
+entity UserEntity
+Administrator->LoginView:Insert Email & Password
+activate LoginView
+LoginView-->LoginView:ValidateForm(data)
+alt validData = True
+LoginView -->AuthController : requestToken(email,password)
+activate AuthController
+AuthController -->UserEntity : SearchByEmail(email)
+activate UserEntity
+UserEntity -->AuthController : exist
+deactivate UserEntity
+alt exist = True
+AuthController -->AuthController : generateJWT(salt,data)
+AuthController--> AuthController : prepareRequestBody(token)
+AuthController -->LoginView : request200(token)
+deactivate AuthController
+LoginView -->LoginView : prepareRoutes()
+LoginView ->Administrator : redirectsDashboard()
+else 
+AuthController --> LoginView: request401() 
+LoginView ->Administrator : Displays Error
+end
+else 
+LoginView->Administrator:DisplaysError
+end

@@ -1,0 +1,36 @@
+actor Administrator
+boundary ReactView
+control UserController
+entity UserEntity
+
+Administrator->ReactView:Refills form with data
+activate ReactView
+ReactView-->ReactView:Collects form data
+ReactView-->ReactView:ValidateForm(data)
+alt Valid Data = True
+ReactView -->UserController : sends(data)
+activate UserController
+UserController-->UserController:Receives JSON request
+UserController-->*Bcrypt:<<create>>
+UserController-->Bcrypt:Encrypts password using bcrypt algorithm 
+activate Bcrypt
+Bcrypt -->UserController : Encrypted Password
+deactivate Bcrypt
+destroy Bcrypt
+UserController -->UserController : mergePassword(data)
+UserController-->UserEntity:addUser(data)
+activate UserEntity
+UserEntity-->UserEntity:addUser(data)
+
+UserEntity-->UserController: Added
+deactivate UserEntity
+UserController-->ReactView: response200()
+ReactView -->Administrator : triggerPopup()
+deactivate UserController
+
+
+
+deactivate ReactView
+else 
+ReactView-->Administrator:Displays validation errors
+end

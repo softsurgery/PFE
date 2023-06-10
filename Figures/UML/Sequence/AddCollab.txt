@@ -1,0 +1,46 @@
+actor Administrator
+boundary ReactView
+control UserController
+entity UserEntity
+
+control CollaboratorController
+entity CollaboratorEntity
+
+
+
+Administrator->ReactView:Refills form with data
+activate ReactView
+ReactView-->ReactView:Collects form data
+ReactView-->ReactView:Validates form data
+ref over ReactView,UserEntity:Add User
+alt Valid Data = True
+ReactView -->CollaboratorController : sends(data)
+activate CollaboratorController
+CollaboratorController -->UserController : searchUserById(data.id)
+activate UserController
+UserController -->UserEntity : searchById(id)
+activate UserEntity
+UserEntity -->UserController : User
+deactivate UserEntity
+UserController -->CollaboratorController : Reponse
+deactivate UserController
+destroy UserController
+destroy UserEntity
+alt response
+CollaboratorController-->CollaboratorEntity:addCollaborator(data)
+activate CollaboratorEntity
+CollaboratorEntity-->CollaboratorEntity:addCollaborator(data)
+
+CollaboratorEntity-->CollaboratorController: Added
+deactivate CollaboratorEntity
+CollaboratorController-->ReactView: response200()
+else 
+CollaboratorController-->ReactView: response500()
+end
+deactivate CollaboratorController
+ReactView -->Administrator : triggerPopup(response)
+
+deactivate ReactView
+else 
+ReactView-->Administrator:Displays validation errors
+end
