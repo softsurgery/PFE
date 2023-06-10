@@ -1,16 +1,23 @@
+title Add User
 actor Administrator
 boundary ReactView
 control UserController
 entity UserEntity
 
-Administrator->ReactView:Refills form with data
+Administrator->ReactView:fillForm(data)
 activate ReactView
-ReactView-->ReactView:Collects form data
-ReactView-->ReactView:ValidateForm(data)
+ReactView-->ReactView:collectForm(data)
+ReactView-->ReactView:validateForm(data)
 alt Valid Data = True
 ReactView -->UserController : sends(data)
 activate UserController
 UserController-->UserController:Receives JSON request
+UserController -->UserEntity : searchByEmail(data.email)
+activate UserEntity
+UserEntity -->UserEntity : select(email)
+UserEntity -->UserController : User
+deactivate UserEntity
+alt User ==None
 UserController-->*Bcrypt:<<create>>
 UserController-->Bcrypt:Encrypts password using bcrypt algorithm 
 activate Bcrypt
@@ -20,17 +27,17 @@ destroy Bcrypt
 UserController -->UserController : mergePassword(data)
 UserController-->UserEntity:addUser(data)
 activate UserEntity
-UserEntity-->UserEntity:addUser(data)
-
-UserEntity-->UserController: Added
+UserEntity-->UserEntity:add(data)
+UserEntity-->UserController: User
 deactivate UserEntity
 UserController-->ReactView: response200()
-ReactView -->Administrator : triggerPopup()
-deactivate UserController
-
-
-
-deactivate ReactView
+ReactView -->Administrator : triggerPopup("Added Successfully")
 else 
-ReactView-->Administrator:Displays validation errors
+UserController -->ReactView : response400()
+ReactView ->Administrator : triggerPopUp("User Exists")
+deactivate UserController
+end
+else 
+ReactView->Administrator:displays(error)
+deactivate ReactView
 end

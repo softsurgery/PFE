@@ -1,0 +1,43 @@
+title AddCollab
+
+actor Administrator/Collaborator
+boundary ClientView
+control EntrepriseController
+entity EntrepriseEntity
+control ClientController
+entity ClientEntity
+
+Administrator/Collaborator->ClientView:fillsForm(data)
+activate ClientView
+ClientView-->ClientView:collectForm(data)
+ClientView-->ClientView:validateForm(data)
+ref over ClientView,EntrepriseEntity:Add Entreprise
+alt Valid Data = True
+ClientView -->ClientController : sends(data)
+activate ClientController
+ClientController -->EntrepriseController : searchEntrepriseById(data.id)
+activate EntrepriseController
+EntrepriseController -->EntrepriseEntity : searchById(id)
+activate EntrepriseEntity
+EntrepriseEntity -->EntrepriseController : Entrprise
+deactivate EntrepriseEntity
+EntrepriseController -->ClientController : Reponse
+deactivate EntrepriseController
+destroy EntrepriseController
+destroy EntrepriseEntity
+alt response
+ClientController-->ClientEntity:addClient(data)
+activate ClientEntity
+ClientEntity-->ClientEntity:add(data)
+ClientEntity-->ClientController: Added
+deactivate ClientEntity
+ClientController-->ClientView: response200()
+else 
+ClientController-->ClientView: response500()
+end
+deactivate ClientController
+ClientView -->Administrator/Collaborator : triggerPopup(response)
+deactivate ClientView
+else 
+ClientView-->Administrator/Collaborator:displays(error)
+end

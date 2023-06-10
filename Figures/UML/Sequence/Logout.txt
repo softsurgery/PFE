@@ -1,0 +1,30 @@
+title logout
+
+actor Administrator
+boundary ReactView
+control AuthController
+entity ActiveTokenEntity
+entity BannedTokenEntity
+
+Administrator ->ReactView : Logout()
+activate ReactView
+ReactView -->ReactView : getAccessToken()
+ReactView -->ReactView : preparesRequest(token)
+ReactView -->AuthController : sendRequest(request)
+activate AuthController
+AuthController -->ActiveTokenEntity: delete(token)
+activate ActiveTokenEntity
+ActiveTokenEntity -->ActiveTokenEntity : delete(token)
+ActiveTokenEntity -->AuthController : deleted
+deactivate ActiveTokenEntity
+AuthController -->BannedTokenEntity : add(token)
+activate BannedTokenEntity
+BannedTokenEntity -->BannedTokenEntity : add(token)
+BannedTokenEntity -->AuthController : added
+deactivate BannedTokenEntity
+AuthController -->ReactView : response
+deactivate AuthController
+ReactView -->ReactView : clearAccessToken()
+ReactView -->ReactView : clearRefreshToken()
+ReactView ->Administrator : redirectsLogin()
+

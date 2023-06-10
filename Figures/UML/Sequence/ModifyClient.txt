@@ -1,0 +1,45 @@
+title Modify Client
+
+actor Administrator/Collaborator
+boundary ClientView
+control EntrepriseController
+entity EntrepriseEntity
+control ClientController
+entity ClientEntity
+
+Administrator/Collaborator->ClientView:RefillsForm(data)
+activate ClientView
+ClientView-->ClientView:collectForm(data)
+ClientView-->ClientView:validateForm(data)
+
+alt data = True
+ClientView-->EntrepriseController:sendsData(data)
+ref over EntrepriseController,EntrepriseEntity:Modify Entreprise
+destroy EntrepriseController
+destroy EntrepriseEntity
+ClientView-->ClientController:sendsData(data)
+activate ClientController
+ClientController-->ClientController: receivesData(data)
+ClientController -->ClientEntity : searchById(data.id)
+
+activate ClientEntity
+ClientEntity -->ClientEntity : select(id)
+ClientEntity -->ClientController: Client
+deactivate ClientEntity
+alt Collaborator ==None
+ClientController -->ClientView : response400()
+ClientView ->Administrator/Collaborator : triggerPopUp("Client Not Found")
+else 
+ClientController-->ClientEntity : ModifyClient(data)
+activate ClientEntity
+ClientEntity-->ClientEntity:Update(data)
+ClientEntity-->ClientController: Altered Successfully
+deactivate ClientEntity
+ClientController-->ClientView: response200()
+deactivate ClientController
+ClientView->Administrator/Collaborator : triggerPopUp("Modified Succefully")
+deactivate ClientView
+end
+else 
+ClientView->Administrator/Collaborator:displays(error)
+end

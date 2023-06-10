@@ -1,0 +1,30 @@
+actor Administrator
+boundary CollaboratorView
+control CollaboratorController
+
+entity CollaboratorEntity
+
+Administrator -> CollaboratorView: initiateDeletion(CollaboratorId)
+activate CollaboratorView
+CollaboratorView -->CollaboratorController :deleteCollaborator(id)
+activate CollaboratorController
+
+CollaboratorController -->CollaboratorEntity : searchCollaboratorById(id)
+activate CollaboratorEntity
+CollaboratorEntity -->CollaboratorEntity : select(id)
+CollaboratorEntity -->CollaboratorController : Collaborator
+deactivate CollaboratorEntity
+alt Collaborator!=None
+CollaboratorController -->CollaboratorEntity : deleteCollaborator(id)
+activate CollaboratorEntity
+CollaboratorEntity -->CollaboratorEntity : delete(id)
+CollaboratorEntity -->CollaboratorController : Deleted
+deactivate CollaboratorEntity 
+CollaboratorController -->CollaboratorView : response200()
+deactivate CollaboratorController
+CollaboratorView ->Administrator : triggerPopUp("Collaborator Deleted Successfully")
+deactivate CollaboratorView
+else
+CollaboratorController -->CollaboratorView: response400()
+CollaboratorView ->Administrator : triggerPopUp("Collaborator Not Found")
+end

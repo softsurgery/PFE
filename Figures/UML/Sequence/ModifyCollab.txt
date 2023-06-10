@@ -1,0 +1,45 @@
+title Modify Collaborator
+
+actor Administrator
+boundary CollaboratorView
+control UserController
+entity UserEntity
+control CollaboratorController
+entity CollaboratorEntity
+
+Administrator->CollaboratorView:RefillsForm(data)
+activate CollaboratorView
+CollaboratorView-->CollaboratorView:collectForm(data)
+CollaboratorView-->CollaboratorView:validateForm(data)
+
+alt data = True
+CollaboratorView-->UserController:sendsData(data)
+ref over UserController,UserEntity:Modify User
+destroy UserController
+destroy UserEntity
+CollaboratorView-->CollaboratorController:sendsData(data)
+activate CollaboratorController
+CollaboratorController-->CollaboratorController: receivesData(data)
+CollaboratorController -->CollaboratorEntity : searchById(data.id)
+
+activate CollaboratorEntity
+CollaboratorEntity -->CollaboratorEntity : select(id)
+CollaboratorEntity -->CollaboratorController: Collaborator
+deactivate CollaboratorEntity
+alt Collaborator ==None
+CollaboratorController -->CollaboratorView : response400()
+CollaboratorView ->Administrator : triggerPopUp("Collaborator Not Found")
+else 
+CollaboratorController-->CollaboratorEntity : ModifyCollaborator(data)
+activate CollaboratorEntity
+CollaboratorEntity-->CollaboratorEntity:Update(data)
+CollaboratorEntity-->CollaboratorController: Altered Successfully
+deactivate CollaboratorEntity
+CollaboratorController-->CollaboratorView: response200()
+deactivate CollaboratorController
+CollaboratorView->Administrator : triggerPopUp("Modified Succefully")
+deactivate CollaboratorView
+end
+else 
+CollaboratorView->Administrator:displays(error)
+end

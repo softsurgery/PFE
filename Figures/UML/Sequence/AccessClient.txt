@@ -1,0 +1,18 @@
+title AddCollab
+
+actor Administrator/Collaborator
+boundary ClientView
+control UserController
+entity UserEntity
+
+Administrator/Collaborator->ClientView:requestClients(condition)
+activate ClientView
+ClientView --> UserController : fetchAll(condition)
+activate UserController
+UserController -->UserEntity : fetchAll(condition)
+activate UserEntity
+UserEntity -->UserEntity : select(condition)
+UserEntity -->UserController : Collaborators
+deactivate UserEntity
+UserController -->ClientView : response200(Collaborators)
+ClientView -->Administrator/Collaborator : render(Collaborators)

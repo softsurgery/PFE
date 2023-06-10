@@ -1,0 +1,31 @@
+@startuml
+!theme plain
+left to right direction
+
+:Administrator: as a 
+:Collaborateur: as c
+
+package "Sprint3 UseCase Diagram" {
+(Add Collaborator) as add
+(Modify Personal\n Informations) as modify
+(Access Personal Informations) as access
+(Access Collaborateur Informations ) as accessC
+(Modify Collaborateur\n Personal Informations) as modifyC
+(Delete Collaborateur) as deleteC
+(Login into Account) as login
+}
+
+c ---> modify
+c ---> access
+a ---> accessC
+a ---> modifyC
+a ---> deleteC
+a ---> add
+
+modify ..> login : <<include>>
+add ..> login : <<include>>
+access ..> login : <<include>>
+modifyC ..> login : <<include>>
+accessC ..> login : <<include>>
+deleteC ..> login : <<include>>
+@enduml

@@ -1,0 +1,30 @@
+actor Administrator
+boundary ClientView
+control ClientController
+
+entity ClientEntity
+
+Administrator -> ClientView: initiateDeletion(ClientId)
+activate ClientView
+ClientView -->ClientController :deleteClient(id)
+activate ClientController
+
+ClientController -->ClientEntity : searchClientById(id)
+activate ClientEntity
+ClientEntity -->ClientEntity : select(id)
+ClientEntity -->ClientController : Client
+deactivate ClientEntity
+alt Client!=None
+ClientController -->ClientEntity : deleteClient(id)
+activate ClientEntity
+ClientEntity -->ClientEntity : delete(id)
+ClientEntity -->ClientController : Deleted
+deactivate ClientEntity 
+ClientController -->ClientView : response200()
+deactivate ClientController
+ClientView ->Administrator : triggerPopUp("Client Deleted Successfully")
+deactivate ClientView
+else
+ClientController -->ClientView: response400()
+ClientView ->Administrator : triggerPopUp("Client Not Found")
+end
