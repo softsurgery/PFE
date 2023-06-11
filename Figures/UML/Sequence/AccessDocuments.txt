@@ -1,0 +1,18 @@
+title AddCollab
+
+actor Administrator/Collaborator
+boundary DocumentView
+control DocumentController
+entity DocumentEntity
+
+Administrator/Collaborator->DocumentView:requestDocuments(condition)
+activate DocumentView
+DocumentView --> DocumentController : fetchAll(condition)
+activate DocumentController
+DocumentController -->DocumentEntity : fetchAll(condition)
+activate DocumentEntity
+DocumentEntity -->DocumentEntity : select(condition)
+DocumentEntity -->DocumentController : Documents
+deactivate DocumentEntity
+DocumentController -->DocumentView : response200(Collaborators)
+DocumentView -->Administrator/Collaborator : render(Collaborators)

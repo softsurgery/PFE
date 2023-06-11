@@ -1,0 +1,30 @@
+actor Administrator/Collaborator
+boundary DocumentView
+control DocumentController
+
+entity DocumentEntity
+
+Administrator/Collaborator -> DocumentView: initiateDeletion(DocumentId)
+activate DocumentView
+DocumentView -->DocumentController :deleteDocument(id)
+activate DocumentController
+
+DocumentController -->DocumentEntity : searchDocumentById(id)
+activate DocumentEntity
+DocumentEntity -->DocumentEntity : select(id)
+DocumentEntity -->DocumentController : Document
+deactivate DocumentEntity
+alt Document!=None
+DocumentController -->DocumentEntity : deleteDocument(id)
+activate DocumentEntity
+DocumentEntity -->DocumentEntity : delete(id)
+DocumentEntity -->DocumentController : Deleted
+deactivate DocumentEntity 
+DocumentController -->DocumentView : response200()
+deactivate DocumentController
+DocumentView ->Administrator/Collaborator : triggerPopUp("Document Deleted Successfully")
+deactivate DocumentView
+else
+DocumentController -->DocumentView: response400()
+DocumentView ->Administrator/Collaborator : triggerPopUp("Document Not Found")
+end

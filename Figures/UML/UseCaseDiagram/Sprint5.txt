@@ -1,0 +1,29 @@
+@startuml
+!theme plain
+left to right direction
+
+:Administrator: as a 
+:collaborater: as c
+
+package "Sprint5 UseCase Diagram" {
+(Add Invoice) as addC
+(Access Invoice Informations ) as accessC
+(Modify Invoice informations\n ) as modifyC
+(Delete Invoice) as deleteC
+(Login into account) as login
+}
+
+a --> addC
+c -->  addC
+a --> accessC
+a --> modifyC
+a --> deleteC
+c --> accessC
+c --> modifyC
+c --> deleteC
+
+modifyC ..> login : <<include>>
+accessC ..> login : <<include>>
+deleteC ..> login : <<include>> 
+addC ..> login : <<include>>
+@enduml

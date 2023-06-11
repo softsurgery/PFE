@@ -1,0 +1,43 @@
+title Add Documents
+actor Administrator/Collaborator
+boundary DocumentView
+control DocumentController
+entity DocumentEntity
+
+Administrator/Collaborator->DocumentView:upload(file)
+Administrator/Collaborator->DocumentView:refillForm(data)
+activate DocumentView
+DocumentView-->DocumentView:collectForm(data)
+DocumentView-->DocumentView:validateForm(data)
+alt Valid Data = True
+DocumentView -->DocumentController : sends(data)
+activate DocumentController
+DocumentController -->DocumentEntity : searchById(data.name)
+activate DocumentEntity
+DocumentEntity -->DocumentEntity : select(name)
+DocumentEntity -->DocumentController : Document
+deactivate DocumentEntity
+alt User !=None
+DocumentController-->*Storage Handler:<<create>>
+DocumentController-->Storage Handler:upload(file)
+activate Storage Handler
+Storage Handler -->DocumentController : file Uploaded
+deactivate Storage Handler
+destroy Storage Handler
+DocumentController -->DocumentController : mergeFileInfos(file)
+DocumentController-->DocumentEntity:modifyDocument(data)
+activate DocumentEntity
+DocumentEntity-->DocumentEntity:alter(data)
+DocumentEntity-->DocumentController: Altered
+deactivate DocumentEntity
+DocumentController-->DocumentView: response200()
+DocumentView -->Administrator/Collaborator : triggerPopup("Modified Successfully")
+else 
+DocumentController -->DocumentView : response400()
+DocumentView ->Administrator/Collaborator : triggerPopUp("Document doesn't exists")
+deactivate DocumentController
+end
+else 
+DocumentView->Administrator/Collaborator:displays(error)
+deactivate DocumentView
+end
