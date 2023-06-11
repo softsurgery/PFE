@@ -6,14 +6,20 @@ left to right direction
 :collaborater: as c
 
 package "Sprint5 UseCase Diagram" {
-(Add Taxe) as addC
-(Access Taxe Informations ) as accessC
-(Modify Taxe informations\n ) as modifyC
-(Delete Taxe) as deleteC
+(Add Invoive) as addC
+(Access Invoive Informations ) as accessC
+(Modify Invoive informations\n ) as modifyC
+(Delete Invoive) as deleteC
+(Pay Invoice) as pay
+(Cancel Invoice) as cancel
 (Login into account) as login
 }
 
+c ---> pay
+a --> cancel
 a --> addC
+a --> pay
+c --> cancel
 c -->  addC
 a --> accessC
 a --> modifyC
@@ -22,8 +28,11 @@ c --> accessC
 c --> modifyC
 c --> deleteC
 
+
 modifyC ..> login : <<include>>
 accessC ..> login : <<include>>
 deleteC ..> login : <<include>> 
 addC ..> login : <<include>>
+pay ..> login : <<include>>
+cancel ..> login : <<include>>
 @enduml
