@@ -1,0 +1,72 @@
+actor Administrator/Collaborator
+boundary InvoiceView
+control InvoiceController
+control UserController
+
+entity UserEntity
+
+entity InvoiceEntity
+participant TransancationEntity
+control CreditCardController
+entity CreditCardEntity
+
+
+Administrator/Collaborator -> InvoiceView: payInvoice(id)
+activate InvoiceView
+InvoiceView -->InvoiceController :check(id)
+activate InvoiceController
+
+InvoiceController -->InvoiceEntity : searchInvoiceById(id)
+activate InvoiceEntity
+InvoiceEntity -->InvoiceEntity : select(id)
+InvoiceEntity -->InvoiceController : Invoice
+deactivate InvoiceEntity
+alt Invoice.payed == False
+InvoiceController -->*TransancationEntity : <<init>>
+InvoiceController --> TransancationEntity: payInvoice(id)
+activate TransancationEntity
+TransancationEntity -->InvoiceController : CheckIdentity()
+group Secured Connection
+InvoiceController -->InvoiceView : checkRequest()
+deactivate InvoiceController
+InvoiceView -->InvoiceView:confirmPassword() 
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Check Identity")
+deactivate InvoiceView
+
+Administrator/Collaborator ->InvoiceView : insert(passoword)
+InvoiceView -->InvoiceView : prepareData(password,UserId)
+InvoiceView -->InvoiceController : sends(data)
+activate InvoiceController
+InvoiceController -->UserController : searchUserById(data.id)
+activate UserController
+UserController -->UserEntity : searchById(id)
+activate UserEntity
+UserEntity -->UserController : User
+deactivate UserEntity
+UserController -->InvoiceController : User
+deactivate UserController
+alt hash(password) == User.password
+InvoiceController -->CreditCardController : getCreditCardInfo(data.id)
+activate CreditCardController
+CreditCardController -->CreditCardEntity : select(data.id)
+activate CreditCardEntity
+CreditCardEntity -->CreditCardController : CreditCard
+deactivate CreditCardEntity
+CreditCardController -->InvoiceController : CreditCard
+deactivate CreditCardController
+InvoiceController -->TransancationEntity : confirmPayement(CreditCard)
+TransancationEntity -->InvoiceController : feedback
+deactivate TransancationEntity
+destroy TransancationEntity
+InvoiceController -->InvoiceView : response200()
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Payement Success")
+else 
+InvoiceController -->InvoiceView : response400()
+deactivate InvoiceController
+InvoiceView -->Administrator/Collaborator : triggerPopUp("Credentials Error")
+end
+end
+
+else
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Invoice Not Found")
+end
