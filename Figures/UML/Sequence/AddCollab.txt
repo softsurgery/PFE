@@ -1,43 +1,43 @@
 title AddCollab
 
-actor Administrator
-boundary ReactView
-control UserController
-entity UserEntity
-control CollaboratorController
-entity CollaboratorEntity
+actor Administrator/Collaborator
+boundary InvoiceView
+control TaxeController
+entity TaxeEntity
+control InvoiceController
+entity InvoiceEntity
 
-Administrator->ReactView:fillsForm(data)
-activate ReactView
-ReactView-->ReactView:collectForm(data)
-ReactView-->ReactView:validateForm(data)
-ref over ReactView,UserEntity:Add User
+Administrator/Collaborator->InvoiceView:fillsForm(data)
+activate InvoiceView
+InvoiceView-->InvoiceView:collectForm(data)
+InvoiceView-->InvoiceView:validateForm(data)
+ref over InvoiceView,TaxeEntity:Add Taxe
 alt Valid Data = True
-ReactView -->CollaboratorController : sends(data)
-activate CollaboratorController
-CollaboratorController -->UserController : searchUserById(data.id)
-activate UserController
-UserController -->UserEntity : searchById(id)
-activate UserEntity
-UserEntity -->UserController : User
-deactivate UserEntity
-UserController -->CollaboratorController : Reponse
-deactivate UserController
-destroy UserController
-destroy UserEntity
+InvoiceView -->InvoiceController : sends(data)
+activate InvoiceController
+InvoiceController -->TaxeController : searchTaxeById(data.id)
+activate TaxeController
+TaxeController -->TaxeEntity : searchById(id)
+activate TaxeEntity
+TaxeEntity -->TaxeController : Entrprise
+deactivate TaxeEntity
+TaxeController -->InvoiceController : Reponse
+deactivate TaxeController
+destroy TaxeController
+destroy TaxeEntity
 alt response
-CollaboratorController-->CollaboratorEntity:addCollaborator(data)
-activate CollaboratorEntity
-CollaboratorEntity-->CollaboratorEntity:add(data)
-CollaboratorEntity-->CollaboratorController: Added
-deactivate CollaboratorEntity
-CollaboratorController-->ReactView: response200()
+InvoiceController-->InvoiceEntity:addInvoice(data)
+activate InvoiceEntity
+InvoiceEntity-->InvoiceEntity:add(data)
+InvoiceEntity-->InvoiceController: Added
+deactivate InvoiceEntity
+InvoiceController-->InvoiceView: response200()
 else 
-CollaboratorController-->ReactView: response500()
+InvoiceController-->InvoiceView: response500()
 end
-deactivate CollaboratorController
-ReactView -->Administrator : triggerPopup(response)
-deactivate ReactView
+deactivate InvoiceController
+InvoiceView -->Administrator/Collaborator : triggerPopup(response)
+deactivate InvoiceView
 else 
-ReactView-->Administrator:displays(error)
+InvoiceView-->Administrator/Collaborator:displays(error)
 end
