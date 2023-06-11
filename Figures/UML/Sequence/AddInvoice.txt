@@ -1,0 +1,43 @@
+title AddCollab
+
+actor Administrator/Collaborator
+boundary InvoiceView
+control TaxeController
+entity TaxeEntity
+control InvoiceController
+entity InvoiceEntity
+
+Administrator/Collaborator->InvoiceView:fillsForm(data)
+activate InvoiceView
+InvoiceView-->InvoiceView:collectForm(data)
+InvoiceView-->InvoiceView:validateForm(data)
+ref over InvoiceView,TaxeEntity:Add Taxe or Use Existing Tax
+alt Valid Data = True
+InvoiceView -->InvoiceController : sends(data)
+activate InvoiceController
+InvoiceController -->TaxeController : searchTaxeById(data.id)
+activate TaxeController
+TaxeController -->TaxeEntity : searchById(id)
+activate TaxeEntity
+TaxeEntity -->TaxeController : Entrprise
+deactivate TaxeEntity
+TaxeController -->InvoiceController : Reponse
+deactivate TaxeController
+destroy TaxeController
+destroy TaxeEntity
+alt response
+InvoiceController-->InvoiceEntity:addInvoice(data)
+activate InvoiceEntity
+InvoiceEntity-->InvoiceEntity:add(data)
+InvoiceEntity-->InvoiceController: Added
+deactivate InvoiceEntity
+InvoiceController-->InvoiceView: response200()
+else 
+InvoiceController-->InvoiceView: response500()
+end
+deactivate InvoiceController
+InvoiceView -->Administrator/Collaborator : triggerPopup(response)
+deactivate InvoiceView
+else 
+InvoiceView-->Administrator/Collaborator:displays(error)
+end

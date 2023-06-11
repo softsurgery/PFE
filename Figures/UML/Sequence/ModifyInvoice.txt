@@ -1,0 +1,47 @@
+title Modify Invoice
+
+actor Administrator/Collaborator
+boundary InvoiceView
+control TaxeController
+entity TaxeEntity
+control InvoiceController
+entity InvoiceEntity
+
+Administrator/Collaborator->InvoiceView:RefillsForm(data)
+activate InvoiceView
+InvoiceView-->InvoiceView:collectForm(data)
+InvoiceView-->InvoiceView:validateForm(data)
+
+alt data = True
+InvoiceView-->TaxeController:sendsData(data)
+opt
+ref over TaxeController,TaxeEntity:Modify Taxe
+destroy TaxeController
+destroy TaxeEntity
+end
+InvoiceView-->InvoiceController:sendsData(data)
+activate InvoiceController
+InvoiceController-->InvoiceController: receivesData(data)
+InvoiceController -->InvoiceEntity : searchById(data.id)
+
+activate InvoiceEntity
+InvoiceEntity -->InvoiceEntity : select(id)
+InvoiceEntity -->InvoiceController: Invoice
+deactivate InvoiceEntity
+alt Collaborator ==None
+InvoiceController -->InvoiceView : response400()
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Invoice Not Found")
+else 
+InvoiceController-->InvoiceEntity : ModifyInvoice(data)
+activate InvoiceEntity
+InvoiceEntity-->InvoiceEntity:Update(data)
+InvoiceEntity-->InvoiceController: Altered Successfully
+deactivate InvoiceEntity
+InvoiceController-->InvoiceView: response200()
+deactivate InvoiceController
+InvoiceView->Administrator/Collaborator : triggerPopUp("Modified Succefully")
+deactivate InvoiceView
+end
+else 
+InvoiceView->Administrator/Collaborator:displays(error)
+end

@@ -1,0 +1,18 @@
+title AddInvoice
+
+actor Administrator/Collaborator
+boundary InvoiceView
+control InvoiceController
+entity InvoiceEntity
+
+Administrator/Collaborator->InvoiceView:requestInvoices(condition)
+activate InvoiceView
+InvoiceView --> InvoiceController : fetchAll(condition)
+activate InvoiceController
+InvoiceController -->InvoiceEntity : fetchAll(condition)
+activate InvoiceEntity
+InvoiceEntity -->InvoiceEntity : select(condition)
+InvoiceEntity -->InvoiceController : Invoices
+deactivate InvoiceEntity
+InvoiceController -->InvoiceView : response200(Collaborators)
+InvoiceView -->Administrator/Collaborator : render(Collaborators)

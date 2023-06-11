@@ -1,0 +1,30 @@
+actor Administrator/Collaborator
+boundary InvoiceView
+control InvoiceController
+
+entity InvoiceEntity
+
+Administrator/Collaborator -> InvoiceView: initiateDeletion(InvoiceId)
+activate InvoiceView
+InvoiceView -->InvoiceController :deleteInvoice(id)
+activate InvoiceController
+
+InvoiceController -->InvoiceEntity : searchInvoiceById(id)
+activate InvoiceEntity
+InvoiceEntity -->InvoiceEntity : select(id)
+InvoiceEntity -->InvoiceController : Invoice
+deactivate InvoiceEntity
+alt Invoice!=None
+InvoiceController -->InvoiceEntity : deleteInvoice(id)
+activate InvoiceEntity
+InvoiceEntity -->InvoiceEntity : delete(id)
+InvoiceEntity -->InvoiceController : Deleted
+deactivate InvoiceEntity 
+InvoiceController -->InvoiceView : response200()
+deactivate InvoiceController
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Invoice Deleted Successfully")
+deactivate InvoiceView
+else
+InvoiceController -->InvoiceView: response400()
+InvoiceView ->Administrator/Collaborator : triggerPopUp("Invoice Not Found")
+end
