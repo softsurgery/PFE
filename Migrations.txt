@@ -1,0 +1,56 @@
+title Migration of the Database
+
+participant Dev Agent
+participant Machine
+participant Django Kernel
+participant Database Pilote
+participant MySQL Database
+
+//Installing Django
+Dev Agent -> Machine : Exec "pip install django"
+
+activate Machine
+Machine --> Machine :Installing "Django From PyPI"
+Machine --> Dev Agent : Pip Log
+deactivate Machine
+Dev Agent ->Machine : Exec "django-admin startproject migartion
+activate Machine
+Machine --> *Django Kernel: <<create>>
+Django Kernel -->Machine :
+Machine --> Dev Agent : CREATED  
+deactivate Machine
+
+Dev Agent -> Django Kernel : Exec "python manage.py inspectdb > models.py"
+Django Kernel --> Database Pilote : Triggering
+activate Django Kernel
+activate Database Pilote
+Database Pilote --> MySQL Database : Establishing Connection
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+
+Database Pilote --> MySQL Database : Authentication and Handshake
+activate MySQL Database
+MySQL Database --> Database Pilote : 
+deactivate MySQL Database
+
+loop [remaining tables>0]
+Database Pilote->MySQL Database:Query Execution
+activate MySQL Database
+MySQL Database --> Database Pilote :
+deactivate MySQL Database
+Database Pilote --> Django Kernel: Writing into Models.py
+deactivate Database Pilote
+end
+Django Kernel -->Dev Agent : COMPLETED
+deactivate Django Kernel
+
+
+
+
+
+
+
+
+
+
